@@ -9,7 +9,12 @@ install_packages() {
     sudo $1 install -y zsh git wget micro screenfetch
 }
 
-# Установка Oh My Zsh и плагинов
+# Смена оболочки на Zsh
+change_shell_to_zsh() {
+    chsh -s $(which zsh)
+}
+
+# Установка Oh My Zsh без интерактивных запросов
 install_oh_my_zsh() {
     export RUNZSH=no KEEP_ZSHRC=yes
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -41,10 +46,8 @@ case $OS in
         ;;
 esac
 
+# Смена оболочки на Zsh (перед установкой Oh My Zsh)
+change_shell_to_zsh
+
 # Установка Oh My Zsh и плагинов
 install_oh_my_zsh
-
-# Смена оболочки на Zsh
-if [ "$SHELL" != "$(which zsh)" ]; then
-    chsh -s $(which zsh)
-fi
