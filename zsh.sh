@@ -15,9 +15,9 @@ install_oh_my_zsh() {
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-    # Добавление плагинов и темы в .zshrc
-    echo "plugins=(git zsh-autosuggestions zsh-syntax-highlighting sudo history)" >> ~/.zshrc
-    echo "ZSH_THEME=\"af-magic\"" >> ~/.zshrc
+    # Изменение .zshrc с использованием sed
+    sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting sudo history)/' ~/.zshrc
+    sed -i 's/ZSH_THEME=".*"/ZSH_THEME="af-magic"/' ~/.zshrc
 }
 
 # Определение операционной системы и установка пакетов
