@@ -6,7 +6,7 @@ set -e
 # Функция для установки необходимых пакетов
 install_packages() {
     sudo $1 update
-    sudo $1 install -y zsh git wget curl micro screenfetch
+    sudo $1 install -y zsh git wget micro screenfetch
 }
 
 # Установка Oh My Zsh без интерактивных запросов
@@ -42,13 +42,10 @@ case $OS in
         ;;
 esac
 
-# Установка Oh My Zsh и плагинов
+# Установка Oh My Zsh
 install_oh_my_zsh
 
-# Смена оболочки на Zsh
+# Попытка смены оболочки на Zsh
 if [ "$SHELL" != "$(which zsh)" ]; then
     chsh -s $(which zsh)
 fi
-
-# Применение изменений
-source ~/.zshrc
