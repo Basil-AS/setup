@@ -35,7 +35,7 @@ install_package() {
 
 # Проверка и установка пакетов
 install_packages() {
-    for package in zsh git wget micro screenfetch htop neofetch; do
+    for package in zsh git wget micro screenfetch htop; do
         echo "Устанавливаю $package..."
         install_package $package
         if [ $? -ne 0 ]; then
@@ -59,14 +59,9 @@ install_oh_my_zsh() {
     sed -i 's/ZSH_THEME=".*"/ZSH_THEME="af-magic"/' ~/.zshrc
 }
 
-# Интерактивный режим
-interactive_mode() {
-    read -p "Хотите установить дополнительные утилиты? (y/n) " answer
-    if [ "$answer" != "${answer#[Yy]}" ]; then
-        install_packages
-    fi
-}
 
+
+install_packages
 # Основная логика скрипта
 check_required_tools
 interactive_mode
