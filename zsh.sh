@@ -69,7 +69,7 @@ interactive_mode() {
 
 # Проверка и установка пакетов
 install_packages() {
-    for package in zsh screenfetch htop; do
+    for package in zsh screenfetch htop neofetch util-linux-user; do
         echo "Устанавливаю $package..."
         install_package $package
     done
@@ -83,9 +83,5 @@ install_oh_my_zsh
 # Смена оболочки на Zsh
 if [ "$SHELL" != "$(which zsh)" ]; then
     echo "Меняю оболочку на Zsh..."
-    chsh -s $(which zsh)
+    chsh -s $(which zsh) || echo "Не удалось изменить оболочку. Пожалуйста, смените её вручную."
 fi
-
-# Удаление временных файлов
-echo "Удаляю временные файлы..."
-rm -rf /tmp/* || true
