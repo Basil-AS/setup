@@ -13,31 +13,36 @@ check_required_tools() {
 # Функция установки пакетов
 install_package() {
     if [[ -x "$(command -v apt)" ]]; then
-        sudo apt install -y $1
+        sudo apt install -y $1 || handle_install_error $1
     elif [[ -x "$(command -v dnf)" ]]; then
-        sudo dnf install -y $1
+        sudo dnf install -y $1 || handle_install_error $1
     elif [[ -x "$(command -v zypper)" ]]; then
-        sudo zypper install -y $1
+        sudo zypper install -y $1 || handle_install_error $1
     elif [[ -x "$(command -v pacman)" ]]; then
-        sudo pacman -S --noconfirm $1
+        sudo pacman -S --noconfirm $1 || handle_install_error $1
     elif [[ -x "$(command -v apk)" ]]; then
-        sudo apk add $1
+        sudo apk add $1 || handle_install_error $1
     else
         echo "Не удалось найти подходящий пакетный менеджер."
         exit 1
     fi
 }
 
-# Проверка и установка пакетов
-install_packages() {
-    for package in zsh screenfetch htop; do
-        echo "Устанавливаю $package..."
-        install_package $package
-        if [ $? -ne 0 ]; then
-            echo "Ошибка при установке $package"
-            exit 1
+# Обработка ошибки установки
+handle_install_error() {
+    local package=$1
+    echo "Ошибка при установке $package."
+    read -p "Хотите добавить сторонние репозитории для установки $package? (y/n) " answer
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+        if [[ -x "$(command -v dnf)" ]]; then
+            echo "Добавление репозитория EPEL..."
+            sudo dnf install -y epel-release && sudo dnf install -y "$package"
+        else
+            echo "Для вашего дистрибутива добавление сторонних репозиториев не предусмотрено."
         fi
-    done
+    else
+        echo "Пропускаю установку $package."
+    fi
 }
 
 # Установка Oh My Zsh без интерактивных запросов
@@ -54,7 +59,21 @@ install_oh_my_zsh() {
     sed -i 's/ZSH_THEME=".*"/ZSH_THEME="af-magic"/' ~/.zshrc
 }
 
-install_packages
+# Интерактивный режим
+interactive_mode() {
+    read -p "Хотите установить дополнительные утилиты? (y/n) " answer
+    if [ "$answer" != "${answer#[Yy]}" ]; then
+        install_packages
+    fi
+}
+
+# Проверка и установка пакетов
+install_packages() {
+    for package in zsh screenfetch htop; do
+        echo "Устанавливаю $package..."
+        install_package $package
+    done
+}
 
 # Основная логика скрипта
 check_required_tools
