@@ -80,13 +80,9 @@ check_required_tools
 interactive_mode
 install_oh_my_zsh
 
-# Проверка наличия и смена оболочки на Zsh
-if ! command -v chsh &> /dev/null; then
-    echo "Команда chsh не найдена. Устанавливаю util-linux..."
-    install_package util-linux
-fi
-
-if [ "$SHELL" != "$(which zsh)" ]; then
-    echo "Меняю оболочку на Zsh..."
-    chsh -s $(which zsh) || echo "Не удалось изменить оболочку. Пожалуйста, смените её вручную."
+# Попытка смены оболочки на Zsh
+zsh_path=$(which zsh)
+if ! chsh -s "$zsh_path" &> /dev/null; then
+    echo "Не удалось использовать chsh для смены оболочки. Попробую изменить /etc/passwd..."
+    sudo sed -i "s|:$USER:.*:.*:.*:.*:.*|$USER:x:$(id -u):$(id -g)::/home/$USER:$zsh_path|" /etc/passwd
 fi
