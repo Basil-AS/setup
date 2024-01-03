@@ -5,7 +5,7 @@ set -e
 
 # Функция для установки необходимых пакетов
 install_packages() {
-    sudo $1 update
+    sudo $1 update -y
     sudo $1 install -y zsh git wget micro screenfetch
 }
 
