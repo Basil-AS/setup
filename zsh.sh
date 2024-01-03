@@ -1,13 +1,8 @@
 #!/bin/bash
 
-# Логирование
-exec 3>&1 4>&2
-trap 'exec 2>&4 1>&3' 0 1 2 3
-exec 1>log.out 2>&1
-
 # Функция проверки наличия необходимых утилит
 check_required_tools() {
-    for tool in curl git wget micro; do
+    for tool in curl git wget; do
         if ! command -v $tool &> /dev/null; then
             echo "Требуется $tool, но он не установлен. Устанавливаю..."
             install_package $tool
@@ -35,7 +30,7 @@ install_package() {
 
 # Проверка и установка пакетов
 install_packages() {
-    for package in zsh git wget micro screenfetch htop; do
+    for package in zsh screenfetch htop; do
         echo "Устанавливаю $package..."
         install_package $package
         if [ $? -ne 0 ]; then
@@ -59,9 +54,8 @@ install_oh_my_zsh() {
     sed -i 's/ZSH_THEME=".*"/ZSH_THEME="af-magic"/' ~/.zshrc
 }
 
-
-
 install_packages
+
 # Основная логика скрипта
 check_required_tools
 interactive_mode
