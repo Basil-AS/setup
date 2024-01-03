@@ -27,11 +27,8 @@ case $OS in
     ubuntu|debian)
         install_packages "apt"
         ;;
-    fedora)
+    fedora|centos)
         install_packages "dnf"
-        ;;
-    centos)
-        install_packages "yum"
         ;;
     opensuse-leap|opensuse-tumbleweed)
         install_packages "zypper"
