@@ -69,7 +69,7 @@ interactive_mode() {
 
 # Проверка и установка пакетов
 install_packages() {
-    for package in zsh screenfetch htop neofetch util-linux-user; do
+    for package in zsh screenfetch htop neofetch util-linux; do
         echo "Устанавливаю $package..."
         install_package $package
     done
@@ -80,7 +80,12 @@ check_required_tools
 interactive_mode
 install_oh_my_zsh
 
-# Смена оболочки на Zsh
+# Проверка наличия и смена оболочки на Zsh
+if ! command -v chsh &> /dev/null; then
+    echo "Команда chsh не найдена. Устанавливаю util-linux..."
+    install_package util-linux
+fi
+
 if [ "$SHELL" != "$(which zsh)" ]; then
     echo "Меняю оболочку на Zsh..."
     chsh -s $(which zsh) || echo "Не удалось изменить оболочку. Пожалуйста, смените её вручную."
