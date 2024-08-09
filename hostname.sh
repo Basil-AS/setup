@@ -7,8 +7,8 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Изменение имени хоста
-hostnamectl set-hostname lena
-echo "Имя хоста изменено на 'lena'."
+hostnamectl set-hostname fedora
+echo "Имя хоста изменено на 'fedora'."
 
 # Обновление файла /etc/hosts
 sed -i "s/127.0.1.1 .*/127.0.1.1 lena/" /etc/hosts
