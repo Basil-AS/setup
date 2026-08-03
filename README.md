@@ -8,7 +8,7 @@
 
 - определяет версию OpenWrt и `target/subtarget`;
 - устанавливает публичный ключ подписанного AWG APK-репозитория;
-- добавляет или обновляет AWG feed в `/etc/apk/repositories.d/customfeeds.list`;
+- добавляет или обновляет AWG feed в `/etc/apk/repositories.d/customfeeds.list`, сохраняя остальные сторонние feed;
 - сохраняет ключ и feed при `sysupgrade`;
 - выполняет `apk update`;
 - устанавливает или обновляет `kmod-amneziawg`, `amneziawg-tools`, `luci-proto-amneziawg` и русскую локализацию LuCI.
