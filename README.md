@@ -16,21 +16,21 @@
 Запуск на OpenWrt 25.x и новее:
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/Basil-AS/setup/main/openwrt/install-awg.sh | sh
+(tmp="$(mktemp)" && wget -O "$tmp" https://raw.githubusercontent.com/Basil-AS/setup/main/openwrt/install-awg.sh && sh "$tmp"; rc=$?; rm -f "$tmp"; exit "$rc")
 ```
 
-После обновления OpenWrt достаточно снова выполнить ту же команду. Скрипт сам заменит URL feed на путь для текущей версии прошивки и платформы.
+Команда сначала полностью скачивает скрипт и запускает его только после успешной загрузки. После обновления OpenWrt достаточно снова выполнить ту же команду: URL feed будет перестроен под текущую версию прошивки и платформу.
 
 ### Без русской локализации
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/Basil-AS/setup/main/openwrt/install-awg.sh | sh -s -- --no-i18n
+(tmp="$(mktemp)" && wget -O "$tmp" https://raw.githubusercontent.com/Basil-AS/setup/main/openwrt/install-awg.sh && sh "$tmp" --no-i18n; rc=$?; rm -f "$tmp"; exit "$rc")
 ```
 
 ### Только подключить репозиторий и ключ
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/Basil-AS/setup/main/openwrt/install-awg.sh | sh -s -- --repo-only
+(tmp="$(mktemp)" && wget -O "$tmp" https://raw.githubusercontent.com/Basil-AS/setup/main/openwrt/install-awg.sh && sh "$tmp" --repo-only; rc=$?; rm -f "$tmp"; exit "$rc")
 ```
 
 ### Проверка
