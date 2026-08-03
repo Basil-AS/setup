@@ -55,6 +55,7 @@ done
 [ "$(id -u)" -eq 0 ] || fatal "Run this script as root"
 command -v apk >/dev/null 2>&1 || fatal "apk was not found; OpenWrt 25.x or newer is required"
 command -v wget >/dev/null 2>&1 || fatal "wget was not found"
+command -v mktemp >/dev/null 2>&1 || fatal "mktemp was not found"
 [ -r /etc/openwrt_release ] || fatal "/etc/openwrt_release was not found"
 
 # shellcheck disable=SC1091
@@ -85,9 +86,10 @@ log "Using feed: $FEED_URL"
 
 mkdir -p /etc/apk/keys /etc/apk/repositories.d
 
-TMP_KEY="/tmp/awg-openwrt-feed.pem.$$"
-TMP_FEEDS="/tmp/awg-customfeeds.$$"
-trap 'rm -f "$TMP_KEY" "$TMP_FEEDS"' EXIT HUP INT TERM
+TMP_DIR="$(mktemp -d /tmp/awg-install.XXXXXX)" || fatal "Could not create a temporary directory"
+TMP_KEY="$TMP_DIR/awg-openwrt-feed.pem"
+TMP_FEEDS="$TMP_DIR/customfeeds.list"
+trap 'rm -rf "$TMP_DIR"' EXIT HUP INT TERM
 
 log "Downloading the repository signing key"
 wget -q -O "$TMP_KEY" "$AWG_KEY_URL" || fatal "Could not download the signing key"
@@ -96,9 +98,9 @@ grep -q '^-----BEGIN PUBLIC KEY-----$' "$TMP_KEY" || fatal "Downloaded file is n
 cp "$TMP_KEY" "$AWG_KEY_FILE"
 chmod 0644 "$AWG_KEY_FILE"
 
-# Preserve all unrelated custom feeds and replace only this project's AWG feed.
+# Preserve unrelated custom feeds and replace only this project's AWG feed.
 if [ -f "$CUSTOM_FEEDS_FILE" ]; then
-    grep -v '^https://slava-shchipunov\.github\.io/awg-openwrt/' "$CUSTOM_FEEDS_FILE" > "$TMP_FEEDS" || true
+    grep -Fv "$AWG_BASE_URL/" "$CUSTOM_FEEDS_FILE" > "$TMP_FEEDS" || true
 else
     : > "$TMP_FEEDS"
 fi
