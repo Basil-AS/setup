@@ -93,7 +93,8 @@ log "Downloading the repository signing key"
 wget -q -O "$TMP_KEY" "$AWG_KEY_URL" || fatal "Could not download the signing key"
 [ -s "$TMP_KEY" ] || fatal "Downloaded signing key is empty"
 grep -q '^-----BEGIN PUBLIC KEY-----$' "$TMP_KEY" || fatal "Downloaded file is not a PEM public key"
-install -m 0644 "$TMP_KEY" "$AWG_KEY_FILE"
+cp "$TMP_KEY" "$AWG_KEY_FILE"
+chmod 0644 "$AWG_KEY_FILE"
 
 # Preserve all unrelated custom feeds and replace only this project's AWG feed.
 if [ -f "$CUSTOM_FEEDS_FILE" ]; then
